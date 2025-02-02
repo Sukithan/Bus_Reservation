@@ -1,0 +1,14 @@
+backend
+----------
+    db create pannanum 
+    .env create pannanum
+    controller create pannanum
+    routes create pannanum
+    index.js create pannanum
+
+
+frontend
+----------
+     app.js create pannanum
+     pages create pannanum
+            (login page , signup page , confirmation message page , bus seat selection page )
