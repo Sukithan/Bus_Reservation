@@ -50,7 +50,7 @@ const HomePage = () => {
         animate={{ opacity: 1, y: 0 }} 
         className="text-4xl font-bold mb-4 text-white shadow-lg bg-blue-600 px-4 py-2 rounded-lg"
       >
-        Sukii Express
+        NCG Express
       </motion.h2>
 
       <motion.div 
