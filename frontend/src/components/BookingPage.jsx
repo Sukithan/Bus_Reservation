@@ -18,7 +18,7 @@ const BookingPage = () => {
     const token = localStorage.getItem("token");
     if (!token) {
       alert("You must be logged in to book a seat.");
-      navigate("/login");
+      navigate("/auth/login");
       return;
     }
     try {
@@ -27,7 +27,7 @@ const BookingPage = () => {
     } catch (err) {
       console.error("Invalid token", err);
       localStorage.removeItem("token");
-      navigate("/login");
+      navigate("/auth/login");
     }
   }, [navigate]);
 
