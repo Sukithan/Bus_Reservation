@@ -11,7 +11,7 @@ exports.getBookingDetails = (req, res) => {
   const query = `
     SELECT 
       u.username, u.email, 
-      b.id AS booking_id, b.booking_date, b.seat_number, b.payment,
+      b.id AS booking_id, b.booking_date, b.seat_number, b.payment,b.price,
       bus.route_from, bus.route_to, bus.time, bus.departure_time, bus.arrival_time, bus.journey_time
     FROM bookings b
     JOIN users u ON b.user_id = u.id

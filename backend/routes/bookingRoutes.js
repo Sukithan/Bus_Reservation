@@ -1,7 +1,6 @@
-const express = require("express");
 const { getBusTimes, getBusSeats, bookSeat } = require("../controllers/bookingController");
 
-const router = express.Router();
+const router = require("express").Router();
 
 // Define routes
 router.get("/bus-times", getBusTimes);       // Fetch bus times

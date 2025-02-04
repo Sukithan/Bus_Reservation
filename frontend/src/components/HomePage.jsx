@@ -112,7 +112,7 @@ const HomePage = () => {
           <p className="text-gray-900">Departure: {bus.departure_time}</p>
           <p className="text-gray-900">Arrival: {bus.arrival_time}</p>
           <p className="text-gray-900">Journey Time: {bus.journey_time}</p>
-          <p className="text-gray-900">Seats Available: {bus.available_seats}</p>
+          {/* <p className="text-gray-900">Seats Available: {bus.available_seats}</p> */}
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
