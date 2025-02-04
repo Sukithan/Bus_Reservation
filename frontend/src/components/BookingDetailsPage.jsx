@@ -25,8 +25,8 @@ const BookingDetailsPage = () => {
     fetchBookingDetails();
   }, [bookingId]);
 
-  if (loading) return <p className="text-gray-500 text-lg animate-pulse"> Loading booking details...</p>;
-  if (error) return <p className="text-red-500 font-semibold"> {error} </p>;
+  if (loading) return <p className="text-gray-500 text-lg animate-pulse">Loading booking details...</p>;
+  if (error) return <p className="text-red-500 font-semibold">{error}</p>;
 
   return (
     <div className="min-h-screen flex flex-col items-center bg-gradient-to-r from-green-200 to-blue-300 p-4">
@@ -67,6 +67,7 @@ const BookingDetailsPage = () => {
             <p><strong>Journey Time:</strong> {bookingDetails.journey_time}</p>
             <p><strong>Payment Method:</strong> {bookingDetails.payment}</p>
             <p><strong>Booking Date:</strong> {bookingDetails.booking_date}</p>
+            <p><strong>Total Payment:</strong> Rs. {bookingDetails.price}</p>  {/* Display total payment */}
           </div>
 
           <motion.p 

@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 
 const BookingPage = () => {
   const { busId } = useParams();
   const navigate = useNavigate();
-  const [seats, setSeats] = useState(Array.from({ length: 50 }, (_, i) => ({ seatNumber: i + 1, status: "available" })));
-  const [selectedSeat, setSelectedSeat] = useState(null);
+  const [seats, setSeats] = useState([]);
+  const [selectedSeats, setSelectedSeats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [userId, setUserId] = useState(null);
@@ -49,7 +49,11 @@ const BookingPage = () => {
 
   const handleSeatClick = (seat) => {
     if (seat.status === "booked") return;
-    setSelectedSeat(seat.seatNumber);
+    if (selectedSeats.includes(seat.seatNumber)) {
+      setSelectedSeats(selectedSeats.filter((s) => s !== seat.seatNumber));
+    } else if (selectedSeats.length < 3) {
+      setSelectedSeats([...selectedSeats, seat.seatNumber]);
+    }
   };
 
   const handlePaymentChange = (value) => {
@@ -57,24 +61,25 @@ const BookingPage = () => {
   };
 
   const handleBooking = async () => {
-    if (!selectedSeat || !selectedPayment || !userId) {
-      alert("Please complete all selections.");
+    if (selectedSeats.length === 0 || !selectedPayment || !userId) {
+      alert("Please select seats and payment method.");
       return;
     }
     setLoading(true);
     try {
       const response = await axios.post("http://localhost:5000/api/bookings/book-seat", {
         busId,
-        seatNumber: selectedSeat,
+        selectedSeats,
         userId,
         booking_date: new Date().toISOString().split("T")[0],
         payment: selectedPayment,
       });
-      alert("Seat successfully booked!");
+
+      alert(`Seats booked! Total: Rs.${selectedSeats.length * 2000}`);
       navigate(`/BookingDetails/${response.data.bookingId}`);
     } catch (err) {
       console.error(err);
-      alert("Failed to book the seat.");
+      alert("Failed to book seats.");
     } finally {
       setLoading(false);
     }
@@ -86,38 +91,78 @@ const BookingPage = () => {
     { label: "Google Pay", value: "GooglePay", img: "/assets/gpay.png" },
   ];
 
+  // Organizing seats into a bus-like structure
+  const seatLayout = [
+    [1, 2, null, 3, 4],
+    [5, 6, null, 7, 8],
+    [9, 10, null, 11, 12],
+    [13, 14, null, 15, 16],
+    [17, 18, null, 19, 20],
+    [21, 22, null, 23, 24],
+    [25, 26, null, 27, 28],
+    [29, 30, null, 31, 32],
+    [33, 34, null, 35, 36],
+    [37, 38, null, 39, 40],
+    [41, 42, null, 43, 44],
+    [45, 46, 47, 48, 49, 50], // Last row with 6 seats
+  ];
+
   return (
     <div className="min-h-screen flex flex-col items-center bg-gradient-to-r from-green-200 to-blue-300 p-6">
-      <h2 className="text-2xl font-bold mb-6">Book Your Seat</h2>
+      <h2 className="text-2xl font-bold mb-6">Book Your Seats</h2>
       {loading && <p>Loading seats...</p>}
       {error && <p className="text-red-500">{error}</p>}
 
-      {/* Main Layout: Image on Left, Seats on Right */}
-      <div className="flex flex-col md:flex-row items-center justify-center w-full max-w-5xl gap-10">
-        {/* Seat Allocation Reference Image (Left Side) */}
-        <div className="w-full md:w-1/3 flex justify-center">
-          <img src="/assets/seat.jpg" alt="Seat Allocation Reference" className="w-64 md:w-80" />
-        </div>
-
-        {/* Seat Selection Grid (Right Side) */}
-        <div className="w-full md:w-2/3">
-          <div className="grid grid-cols-5 gap-4 mb-6">
-            {seats.map((seat) => (
-              <motion.div
-                key={seat.seatNumber}
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => handleSeatClick(seat)}
-                className={`p-4 text-center rounded cursor-pointer transition-all duration-200 ease-in-out shadow-md 
-                  ${seat.status === "booked" ? "bg-red-500 text-white" : 
-                  seat.seatNumber === selectedSeat ? "bg-green-500 text-white" : "bg-white border"}`}
-              >
-                {seat.seatNumber}
-              </motion.div>
-            ))}
-          </div>
-        </div>
+      {/* Driver Image */}
+      <div className="mb-4">
+        <img src="/assets/driver.png" alt="Driver Seat" className="w-24 h-24 mx-auto" />
       </div>
+
+      {/* Seat Layout */}
+      <div className="flex flex-col space-y-2 mb-6">
+        {seatLayout.map((row, rowIndex) => (
+          <div key={rowIndex} className="flex justify-center space-x-2">
+            {row.map((seatNumber, seatIndex) =>
+              seatNumber === null ? (
+                <div key={seatIndex} className="w-12"></div> // Aisle space
+              ) : (
+                <motion.div
+                  key={seatNumber}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() =>
+                    handleSeatClick(seats.find((s) => s.seatNumber === seatNumber) || {})
+                  }
+                  className={`w-12 h-12 flex items-center justify-center rounded cursor-pointer shadow-md transition-all 
+                    ${
+                      seats.find((s) => s.seatNumber === seatNumber)?.status === "booked"
+                        ? "bg-red-500 text-white"
+                        : selectedSeats.includes(seatNumber)
+                        ? "bg-green-500 text-white"
+                        : "bg-white border"
+                    }`}
+                >
+                  {seatNumber}
+                </motion.div>
+              )
+            )}
+          </div>
+        ))}
+      </div>
+
+      {/* Selected Seats & Total Payment Section */}
+      <motion.div
+        className="bg-white p-4 rounded-lg shadow-lg mb-6 w-full max-w-sm text-center"
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        <p className="text-lg font-semibold mb-2">Selected Seats:</p>
+        <p className="text-xl font-bold">{selectedSeats.join(", ") || "None"}</p>
+        <hr className="my-2" />
+        <p className="text-lg font-semibold">Total Price:</p>
+        <p className="text-2xl font-bold text-green-600">Rs.{selectedSeats.length * 2000}</p>
+      </motion.div>
 
       {/* Payment Method Selection */}
       <div className="mt-6 mb-6 w-full max-w-md">
@@ -144,7 +189,7 @@ const BookingPage = () => {
         </div>
       </div>
 
-      {/* Booking Button */}
+      {/* Confirm Booking Button */}
       <motion.button
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
