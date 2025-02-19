@@ -1,13 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
+import HomePage from "../components/HomePage";
 
 const BookingDetailsPage = () => {
   const { bookingId } = useParams();
+  const navigate = useNavigate();
   const [bookingDetails, setBookingDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sending, setSending] = useState(false);
 
   useEffect(() => {
     const fetchBookingDetails = async () => {
@@ -24,6 +27,29 @@ const BookingDetailsPage = () => {
 
     fetchBookingDetails();
   }, [bookingId]);
+
+  // const onSendTicket = async () => {
+  //   if (!bookingDetails) return;
+
+  //   const phoneNumber = prompt("Enter your phone number:");
+  //   if (!phoneNumber || !/^\d{10}$/.test(phoneNumber)) {
+  //     alert("Invalid phone number! Please enter a 10-digit number.");
+  //     return;
+  //   }
+
+  //   setSending(true);
+  //   try {
+  //     await axios.post("http://localhost:5000/api/send-ticket", {
+  //       phone: phoneNumber,
+  //       message: `Booking Confirmation: Seat ${bookingDetails.seat_number} from ${bookingDetails.route_from} to ${bookingDetails.route_to} on ${bookingDetails.booking_date}. Total: Rs. ${bookingDetails.price}. Thank you!`
+  //     });
+  //     alert("Ticket sent successfully!");
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert("Failed to send the ticket.");
+  //   }
+  //   setSending(false);
+  // };
 
   if (loading) return <p className="text-gray-500 text-lg animate-pulse">Loading booking details...</p>;
   if (error) return <p className="text-red-500 font-semibold">{error}</p>;
@@ -67,7 +93,7 @@ const BookingDetailsPage = () => {
             <p><strong>Journey Time:</strong> {bookingDetails.journey_time}</p>
             <p><strong>Payment Method:</strong> {bookingDetails.payment}</p>
             <p><strong>Booking Date:</strong> {bookingDetails.booking_date}</p>
-            <p><strong>Total Payment:</strong> Rs. {bookingDetails.price}</p>  {/* Display total payment */}
+            <p><strong>Total Payment:</strong> Rs. {bookingDetails.price}</p>
           </div>
 
           <motion.p 
@@ -78,6 +104,25 @@ const BookingDetailsPage = () => {
           >
             Your booking has been successfully confirmed!
           </motion.p>
+
+          <div className="mt-6 flex flex-col md:flex-row gap-4">
+            {/* <motion.button
+              onClick={onSendTicket}
+              disabled={sending}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition disabled:bg-gray-400"
+              whileTap={{ scale: 0.95 }}
+            >
+              {sending ? "Sending..." : "Send Ticket"}
+            </motion.button> */}
+
+            <motion.button
+              onClick={() => navigate("/")}
+              className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition"
+              whileTap={{ scale: 0.95 }}
+            >
+              Go to Home
+            </motion.button>
+          </div>
         </motion.div>
       </div>
     </div>
