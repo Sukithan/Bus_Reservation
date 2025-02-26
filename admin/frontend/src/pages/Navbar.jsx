@@ -7,7 +7,7 @@ const Navbar = () => {
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo / Title */}
         <h1 className="text-white text-3xl font-bold tracking-wide">
-          🚌 NCG Bus Admin
+          🚌 SafeHorizon Admin
         </h1>
 
         {/* Navigation Links */}

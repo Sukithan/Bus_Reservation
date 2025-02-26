@@ -22,7 +22,7 @@ const Dashboard = () => {
         transition={{ duration: 0.5 }}
         className="bg-white p-8 rounded-2xl shadow-2xl text-center w-full max-w-3xl"
       >
-        <h1 className="text-4xl font-bold mb-6 text-gray-800">🚍 NCG Admin Dashboard</h1>
+        <h1 className="text-4xl font-bold mb-6 text-gray-800">🚍 SafeHorizon Admin Dashboard</h1>
         
         {/* Buttons Section */}
         <div className="flex space-x-4 mb-6">
