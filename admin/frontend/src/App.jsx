@@ -7,6 +7,7 @@ import DeleteSeatsPage from "./pages/DeleteSeatPage";
 import SeatDelete from "./pages/SeatDelete";
 import BusConfirmation from "./pages/BusConfirmation";
 import Navbar from "./pages/Navbar";
+import SeatDetail from "./pages/SeatDetail";
 
 function Layout() {
   const location = useLocation();
@@ -22,6 +23,7 @@ function Layout() {
         <Route path="/delete-seats" element={<DeleteSeatsPage />} />
         <Route path="/seatdelete/:busId" element={<SeatDelete />} />
         <Route path="/bus-confirmation/:busId" element={<BusConfirmation />} />
+        <Route path="/admin/seat-detail" element={<SeatDetail />} />
       </Routes>
     </div>
   );
