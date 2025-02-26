@@ -1,10 +1,18 @@
 const db = require("../db");
 
-// Fetch booked seats
+// Fetch booked seats with usernames
 exports.getBookedSeats = (req, res) => {
   const { busId } = req.params;
 
-  const query = `SELECT JSON_UNQUOTE(JSON_EXTRACT(seat_number, '$[*]')) AS seat FROM bookings WHERE bus_id = ?;`;
+  const query = `
+    SELECT 
+      JSON_UNQUOTE(JSON_EXTRACT(seat_number, '$[*]')) AS seat, 
+      users.username 
+    FROM bookings 
+    JOIN users ON bookings.user_id = users.id
+    WHERE bus_id = ?;
+  `;
+
   db.query(query, [busId], (err, results) => {
     if (err) {
       console.error(err);
@@ -15,14 +23,13 @@ exports.getBookedSeats = (req, res) => {
       return res.status(200).json([]); // No booked seats
     }
 
-    // Convert booked seat JSON array into a proper list
-    const bookedSeats = results.flatMap(row => JSON.parse(row.seat));
-
-    // Send back the seat numbers as an array
+    // Convert booked seat JSON array into an array of objects
+    const bookedSeats = results.flatMap(row => 
+      JSON.parse(row.seat).map(seat => ({ seat_number: seat, username: row.username })))
+      
     res.status(200).json(bookedSeats);
   });
 };
-
 
 // Delete selected seats
 exports.deleteSeats = (req, res) => {
@@ -31,7 +38,6 @@ exports.deleteSeats = (req, res) => {
     return res.status(400).json({ error: "Missing required fields." });
   }
 
-  // Step 1: Fetch all bookings for the given bus_id
   const fetchQuery = `SELECT id, seat_number FROM bookings WHERE bus_id = ?;`;
   db.query(fetchQuery, [busId], (err, results) => {
     if (err) {
@@ -43,13 +49,11 @@ exports.deleteSeats = (req, res) => {
       return res.status(404).json({ error: "No booked seats found." });
     }
 
-    // Step 2: Process each booking row
     const updates = results.map((row) => {
-      let bookedSeats = JSON.parse(row.seat_number); // Convert JSON to array
-      let updatedSeats = bookedSeats.filter(seat => !selectedSeats.includes(seat)); // Remove selected seats
+      let bookedSeats = JSON.parse(row.seat_number); 
+      let updatedSeats = bookedSeats.filter(seat => !selectedSeats.includes(seat)); 
 
       if (updatedSeats.length === 0) {
-        // If no seats left in this booking, delete the row
         return new Promise((resolve, reject) => {
           const deleteQuery = `DELETE FROM bookings WHERE id = ?;`;
           db.query(deleteQuery, [row.id], (deleteErr) => {
@@ -58,7 +62,6 @@ exports.deleteSeats = (req, res) => {
           });
         });
       } else {
-        // Otherwise, update the booking with the new seat list
         return new Promise((resolve, reject) => {
           const updateQuery = `UPDATE bookings SET seat_number = ? WHERE id = ?;`;
           db.query(updateQuery, [JSON.stringify(updatedSeats), row.id], (updateErr) => {
@@ -69,7 +72,6 @@ exports.deleteSeats = (req, res) => {
       }
     });
 
-    // Step 3: Execute all queries in parallel
     Promise.all(updates)
       .then(() => {
         res.status(200).json({ message: "Seats successfully deleted." });
@@ -80,6 +82,3 @@ exports.deleteSeats = (req, res) => {
       });
   });
 };
-
-
-

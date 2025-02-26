@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 const SeatDelete = () => {
   const { busId } = useParams();  // Get busId 
   const navigate = useNavigate();
-  const [bookedSeats, setBookedSeats] = useState(new Set()); // Stores booked seat numbers as a Set
+  const [bookedSeats, setBookedSeats] = useState({}); // Store booked seats with usernames in an object
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -24,7 +24,12 @@ const SeatDelete = () => {
       try {
         const response = await axios.get(`http://localhost:5001/api/admin/delete/${busId}`);
         if (response.data && Array.isArray(response.data)) {
-          setBookedSeats(new Set(response.data)); 
+          // Map the booked seats to an object with seat number as key and username as value
+          const bookedSeatsWithUsernames = response.data.reduce((acc, { seat_number, username }) => {
+            acc[seat_number] = username;
+            return acc;
+          }, {});
+          setBookedSeats(bookedSeatsWithUsernames);
         } else {
           setError("No booked seats found.");
         }
@@ -40,7 +45,7 @@ const SeatDelete = () => {
   }, [busId]);
 
   const handleSeatClick = (seatNumber) => {
-    if (!bookedSeats.has(seatNumber)) return; // Only allow selection of booked seats
+    if (!bookedSeats[seatNumber]) return; // Only allow selection of booked seats
 
     setSelectedSeats((prev) =>
       prev.includes(seatNumber)
@@ -62,9 +67,14 @@ const SeatDelete = () => {
         userId
       });
       alert("Seats successfully deleted!");
-      setBookedSeats(new Set([...bookedSeats].filter(seat => !selectedSeats.includes(seat)))); // Remove deleted seats from UI
+      setBookedSeats((prevSeats) => {
+        const updatedSeats = { ...prevSeats };
+        selectedSeats.forEach((seat) => {
+          delete updatedSeats[seat]; // Remove deleted seats from the state
+        });
+        return updatedSeats;
+      });
       setSelectedSeats([]);
-      //navigate(`/admin/seat-detail`);
     } catch (err) {
       console.error(err);
       alert("Failed to delete seats.");
@@ -89,7 +99,7 @@ const SeatDelete = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col items-center p-6">
+    <div className="min-h-screen flex flex-col items-center p-6 bg-blue-100">
       <h2 className="text-2xl font-bold mb-6">Delete Booked Seats for Bus {busId}</h2>
       {loading && <p>Loading...</p>}
       {error && <p className="text-red-500">{error}</p>}
@@ -110,20 +120,31 @@ const SeatDelete = () => {
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => handleSeatClick(seatNumber)}
-                  className={`w-12 h-12 flex items-center justify-center rounded cursor-pointer shadow-md transition-all 
-                    ${
-                      bookedSeats.has(seatNumber)
-                        ? "bg-red-500 text-white"  // Booked seats in red
-                        : "bg-gray-300"
-                    } ${selectedSeats.includes(seatNumber) ? "border-4 border-blue-500" : ""}`}
+                  className={`w-12 h-12 flex flex-col items-center justify-center rounded cursor-pointer shadow-md transition-all 
+                    ${bookedSeats[seatNumber] ? "bg-red-500 text-white" : "bg-gray-300"} 
+                    ${selectedSeats.includes(seatNumber) ? "border-4 border-blue-500" : ""}`}
                 >
                   {seatNumber}
+                  {bookedSeats[seatNumber] && (
+                    <span className="text-xs text-white">{bookedSeats[seatNumber]}</span>
+                  )}
                 </motion.div>
               )
             )}
           </div>
         ))}
       </div>
+
+      {selectedSeats.length > 0 && (
+        <div className="bg-white shadow-lg rounded-lg p-4 mb-4 w-80 text-center">
+          <h3 className="text-xl font-semibold mb-2">Selected Seats:</h3>
+          <ul>
+            {selectedSeats.map((seat) => (
+              <li key={seat} className="text-blue-700 font-semibold">Seat {seat} - {bookedSeats[seat]}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <button
         onClick={handleDelete}

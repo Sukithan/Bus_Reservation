@@ -15,22 +15,52 @@ const AdminLogin = () => {
       localStorage.setItem("token", response.data.token);
       navigate("/dashboard");
     } catch (error) {
-      alert("Invalid credentials");
+      alert("Invalid credentials 😓");
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-blue-100">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-white p-6 rounded-lg shadow-xl w-full max-w-sm"
       >
-        <h2 className="text-2xl font-bold text-center text-gray-700 mb-4">🔑 Admin Login</h2>
+        <motion.h2
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-3xl font-extrabold text-center text-gray-700 mb-6"
+        >
+          🌟 Welcome Admin! 🚀
+        </motion.h2>
+        <motion.p
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center text-lg text-gray-600 mb-6"
+        >
+          Please login to access the Admin Dashboard ✨
+        </motion.p>
         <form onSubmit={handleLogin} className="space-y-4">
-          <input className="border p-2 w-full rounded" type="text" placeholder="Admin Name" value={username} onChange={(e) => setUsername(e.target.value)} />
-          <input className="border p-2 w-full rounded" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          <motion.button className="bg-blue-500 text-white px-4 py-2 rounded w-full hover:bg-blue-600">Login</motion.button>
+          <input
+            className="border p-2 w-full rounded text-lg"
+            type="text"
+            placeholder="Admin Username 🧑‍💼"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
+          <input
+            className="border p-2 w-full rounded text-lg"
+            type="password"
+            placeholder="Password 🔑"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            className="bg-blue-500 text-white px-4 py-2 rounded w-full hover:bg-blue-600 transition duration-200"
+          >
+            Login 🚪
+          </motion.button>
         </form>
       </motion.div>
     </div>
