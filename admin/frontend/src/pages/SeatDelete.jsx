@@ -4,12 +4,14 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 const SeatDelete = () => {
-  const { busId } = useParams();  // Get busId from URL
+  const { busId } = useParams();  // Get busId 
   const navigate = useNavigate();
   const [bookedSeats, setBookedSeats] = useState(new Set()); // Stores booked seat numbers as a Set
   const [selectedSeats, setSelectedSeats] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const userId = 1;
 
   useEffect(() => {
     if (!busId) {
@@ -22,7 +24,7 @@ const SeatDelete = () => {
       try {
         const response = await axios.get(`http://localhost:5001/api/admin/delete/${busId}`);
         if (response.data && Array.isArray(response.data)) {
-          setBookedSeats(new Set(response.data)); // Store as a Set for faster lookup
+          setBookedSeats(new Set(response.data)); 
         } else {
           setError("No booked seats found.");
         }
@@ -57,10 +59,12 @@ const SeatDelete = () => {
       await axios.post("http://localhost:5001/api/admin/delete/seat", {
         busId,
         selectedSeats,
+        userId
       });
       alert("Seats successfully deleted!");
       setBookedSeats(new Set([...bookedSeats].filter(seat => !selectedSeats.includes(seat)))); // Remove deleted seats from UI
       setSelectedSeats([]);
+      //navigate(`/admin/seat-detail`);
     } catch (err) {
       console.error(err);
       alert("Failed to delete seats.");
@@ -111,7 +115,7 @@ const SeatDelete = () => {
                       bookedSeats.has(seatNumber)
                         ? "bg-red-500 text-white"  // Booked seats in red
                         : "bg-gray-300"
-                    } ${selectedSeats.includes(seatNumber) ? "border-4 border-yellow-500" : ""}`}
+                    } ${selectedSeats.includes(seatNumber) ? "border-4 border-blue-500" : ""}`}
                 >
                   {seatNumber}
                 </motion.div>
