@@ -1,68 +1,77 @@
-SafeHorizon Travels 🚍🌍
-SafeHorizon Travels is a full-stack bus booking system built to enhance my skills in full-stack web development. This project includes a user side for booking buses and an admin panel for managing bus listings and booked seats. 🚀
+🚍 SafeHorizon Travels 🌍
 
-Features 🛠️
-User Side 👥:
-Sign-up and Login functionality for users. 🔑
-Bus seat booking system. 🎫
-View available buses for different routes. 🚌
-Admin Panel 🖥️:
-Admins can add new buses. 🚍
-Admins can delete already booked seats. 🧹
-Tech Stack ⚙️
-Frontend: React, Tailwind CSS, and JavaScript 🌐
-Backend: Node.js, Express.js 💻
-Database: MySQL 🗃️
-How to Run This Project 🚀
-For the User Side 👤:
+Welcome to SafeHorizon Travels! 🎉 This is a full-stack bus booking system built to enhance my skills in full-stack web development. With this app, users can sign up, log in, and book bus seats, while admins can manage buses and delete already booked seats. 🚀
+
+🔧 Technologies Used
+Frontend 🌐
+React.js 💻
+Tailwind CSS 🎨
+Backend ⚙️
+Node.js
+Express.js
+Database 🗄️
+MySQL
+🛠️ Features
+User Side 👥
+✅ User Signup & Login 🔑
+✅ Book Bus Seats 🎫
+✅ View Available Buses 🚌
+
+Admin Panel 🖥️
+✅ Add New Buses 🚍
+✅ Delete Already Booked Seats ❌
+
+⚡ Setup Instructions
+Prerequisites
+✔️ Node.js ✅
+✔️ MySQL ✅
+
+🏗️ Installation
 Clone the repository:
-
 bash
 Copy
 Edit
 git clone https://github.com/Sukithan/Bus_Reservation.git
 cd Bus_Reservation
-Install dependencies and start the frontend:
-
+Set up the User Side:
+Start the Frontend:
 bash
 Copy
 Edit
 cd frontend
 npm install
 npm start
-Open a new terminal and start the backend:
-
+Start the Backend:
 bash
 Copy
 Edit
 cd backend
 npm install
 node server.js
-For the Admin Panel 🏢:
-Open a new terminal and navigate to the admin panel folder:
-
+Set up the Admin Panel:
+Start the Admin Frontend:
 bash
 Copy
 Edit
 cd admin
-Start the frontend for the admin panel:
-
-bash
-Copy
-Edit
 cd frontend
+npm install
 npm run dev
-In a new terminal, start the backend for the admin panel:
-
+Start the Admin Backend:
 bash
 Copy
 Edit
+cd admin
 cd backend
 npm install
 node server.js
-Future Improvements 🔮
-Interactive Maps 🗺️: Integration of maps to show bus routes.
-Estimated Arrival Times ⏱️: Display of bus arrival times for different districts.
-Notes 📌
-This project was built for self-learning purposes and is an individual project aimed at expanding my knowledge in full-stack web development.
-Feel free to check out the project and let me know if you have any feedback or suggestions! 💬
+🔮 Future Improvements
+🚏 Interactive Maps: Integration of maps to display bus routes.
+⏳ Estimated Arrival Times: Display estimated bus arrival times for different districts.
+
+💡 Notes
+This project was built for self-learning purposes and is an individual project aimed at deepening my knowledge in full-stack web development.
+
+Feel free to explore the project and share your feedback! 💬
+
+🏷️ #FullStackDevelopment #WebDevelopment #React #NodeJS #TailwindCSS #ExpressJS #MySQL #SafeHorizonTravels
